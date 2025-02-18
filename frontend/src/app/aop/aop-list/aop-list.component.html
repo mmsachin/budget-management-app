@@ -1,0 +1,56 @@
+<!-- frontend/src/app/aop/aop-list/aop-list.component.html -->
+<div class="budget-list-container">
+    <div class="budget-header">
+        <h2 class="budget-title">AOP Headers</h2>
+        <button ng-click="$ctrl.goToCreateAopHeader()" class="create-button">
+            <i class="fas fa-plus"></i> Add AOP Header
+        </button>
+    </div>
+
+    <div ng-if="$ctrl.loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading AOP Headers...</p>
+    </div>
+
+    <div ng-if="$ctrl.error" class="error-message">
+        <p>{{$ctrl.error}}</p>
+    </div>
+
+    <table ng-if="!$ctrl.loading && $ctrl.aopHeaders.length > 0" class="budget-table">
+        <thead>
+            <tr>
+                <th>AOP Name</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="header in $ctrl.aopHeaders">
+                <td>{{header.aop_name}}</td>
+                <td>${{header.total_amount | number:2}}</td>
+                <td>{{header.status}}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button ng-click="$ctrl.editAopHeader(header.aop_id)" class="edit-button">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button ng-click="$ctrl.deleteAopHeader(header.aop_id)" class="delete-button">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button ng-click="$ctrl.setAopStatus(header.aop_id, 'active')" class="edit-button" ng-disabled="header.status === 'active'">
+                           Set Active
+                        </button>
+                         <button ng-click="$ctrl.setAopStatus(header.aop_id, 'eol')" class="delete-button" ng-disabled="header.status === 'eol'">
+                           Set EOL
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div ng-if="!$ctrl.loading && !$ctrl.error && $ctrl.aopHeaders.length === 0" class="empty-state">
+        <i class="fas fa-folder-open"></i>
+        <h3>No AOP Headers found</h3>
+    </div>
+</div>

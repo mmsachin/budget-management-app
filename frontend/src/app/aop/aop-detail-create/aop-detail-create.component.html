@@ -1,0 +1,41 @@
+<!-- frontend/src/app/aop/aop-detail-create/aop-detail-create.component.html -->
+<div class="budget-form-container">
+    <div class="budget-form-header">
+        <h2 class="budget-title">{{ $ctrl.isEditMode ? 'Edit AOP Detail' : 'Create AOP Detail' }}</h2>
+        <button type="button" ng-click="$ctrl.goBack()" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </button>
+    </div>
+
+    <form ng-submit="$ctrl.saveAopDetail()" class="budget-form" name="aopDetailForm">
+        <div class="form-grid">
+             <div class="form-group" ng-if="!$ctrl.isEditMode">
+                <label for="aop_id">AOP ID <span class="required">*</span></label>
+                <input type="text" id="aop_id" name="aop_id" ng-model="$ctrl.aopDetail.aop_id" required class="form-input" ng-disabled="$ctrl.isEditMode" >
+            </div>
+            <div class="form-group">
+                <label for="cost_center_code">Cost Center <span class="required">*</span></label>
+                <select id="cost_center_code" name="cost_center_code" ng-model="$ctrl.aopDetail.cost_center_code" required class="form-input" ng-disabled="$ctrl.loadingCostCenters">
+                    <option value="">Select a Cost Center</option>
+                    <option ng-repeat="costCenter in $ctrl.costCenters" value="{{costCenter.cost_center_code}}">{{costCenter.cost_center_name}} ({{costCenter.cost_center_code}})</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount <span class="required">*</span></label>
+                <input type="number" id="amount" name="amount" ng-model="$ctrl.aopDetail.amount" required step="0.01" min="0" class="form-input">
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.error" class="error-message">
+            {{ $ctrl.error }}
+        </div>
+
+        <div class="form-actions">
+            <button type="button" ng-click="$ctrl.goBack()" class="cancel-button">Cancel</button>
+            <button type="submit" class="save-button" ng-disabled="aopDetailForm.$invalid || $ctrl.saving">
+                <i class="fas" ng-class="{'fa-spinner fa-spin': $ctrl.saving, 'fa-save': !$ctrl.saving}"></i>
+                {{ $ctrl.saving ? 'Saving...' : 'Save' }}
+            </button>
+        </div>
+    </form>
+</div>

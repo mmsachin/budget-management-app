@@ -1,0 +1,42 @@
+<!-- frontend/src/app/aop/aop-create/aop-create.component.html -->
+<div class="budget-form-container">
+    <div class="budget-form-header">
+        <h2 class="budget-title">{{ $ctrl.isEditMode ? 'Edit AOP Header' : 'Create AOP Header' }}</h2>
+        <button type="button" ng-click="$ctrl.goBack()" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </button>
+    </div>
+
+    <form ng-submit="$ctrl.saveAopHeader()" class="budget-form" name="aopHeaderForm">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="aop_name">AOP Name <span class="required">*</span></label>
+                <input type="text" id="aop_name" name="aop_name" ng-model="$ctrl.aopHeader.aop_name" required class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="total_amount">Total Amount <span class="required">*</span></label>
+                <input type="number" id="total_amount" name="total_amount" ng-model="$ctrl.aopHeader.total_amount" required step="0.01" min="0" class="form-input">
+            </div>
+            <div class="form-group" ng-if="$ctrl.isEditMode">
+              <label for="status">Status</label>
+                <select id="status" name="status" ng-model="$ctrl.aopHeader.status" required class="form-input">
+                    <option value="draft">Draft</option>
+                    <option value="active">Active</option>
+                    <option value="eol">EOL</option>
+                </select>
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.error" class="error-message">
+            {{ $ctrl.error }}
+        </div>
+
+        <div class="form-actions">
+            <button type="button" ng-click="$ctrl.goBack()" class="cancel-button">Cancel</button>
+            <button type="submit" class="save-button" ng-disabled="aopHeaderForm.$invalid || $ctrl.saving">
+                <i class="fas" ng-class="{'fa-spinner fa-spin': $ctrl.saving, 'fa-save': !$ctrl.saving}"></i>
+                {{ $ctrl.saving ? 'Saving...' : 'Save' }}
+            </button>
+        </div>
+    </form>
+</div>

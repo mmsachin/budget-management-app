@@ -1,0 +1,32 @@
+<!-- frontend/src/app/login/login.component.html -->
+<div class="login-container" ng-cloak>
+  <div class="login-header">
+    <img src="assets/logo-placeholder.png" alt="Budget Management App Logo" class="logo">
+    <h1>Budget Management App</h1>
+    <h2>FP&A Hackathon</h2>
+  </div>
+  
+  <form ng-submit="$ctrl.login()" class="login-form" name="loginForm" novalidate>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input 
+        type="password" 
+        id="password" 
+        name="password"
+        ng-model="$ctrl.formData.password"
+        ng-disabled="$ctrl.isLoading"
+        required
+        class="form-control">
+    </div>
+    <button 
+      type="submit" 
+      ng-disabled="!$ctrl.isFormValid() || $ctrl.isLoading"
+      class="login-button">
+      <span ng-if="!$ctrl.isLoading">Login</span>
+      <span ng-if="$ctrl.isLoading">Logging in...</span>
+    </button>
+    <div ng-if="$ctrl.loginError" class="error-message" role="alert">
+      {{ $ctrl.loginError }}
+    </div>
+  </form>
+</div>

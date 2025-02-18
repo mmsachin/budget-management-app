@@ -1,0 +1,54 @@
+<!-- frontend/src/app/cost-center/cost-center-create/cost-center-create.component.html -->
+<div class="budget-form-container">
+    <div class="budget-form-header">
+        <h2 class="budget-title">{{ $ctrl.isEditMode ? 'Edit Cost Center' : 'Create Cost Center' }}</h2>
+        <button type="button" ng-click="$ctrl.goBack()" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </button>
+    </div>
+
+    <form ng-submit="$ctrl.saveCostCenter()" class="budget-form" name="costCenterForm">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="cost_center_code">Cost Center Code <span class="required">*</span></label>
+                <input type="text" 
+                       id="cost_center_code" 
+                       name="cost_center_code"
+                       ng-model="$ctrl.costCenter.cost_center_code" 
+                       required
+                       ng-disabled="$ctrl.isEditMode"
+                       ng-pattern="/^[a-zA-Z0-9]+$/"
+                       maxlength="50"
+                       class="form-input">
+                <small class="form-text text-muted" ng-if="costCenterForm.cost_center_code.$error.pattern">
+                    Code must be alphanumeric
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="cost_center_name">Cost Center Name <span class="required">*</span></label>
+                <input type="text" 
+                       id="cost_center_name" 
+                       name="cost_center_name"
+                       ng-model="$ctrl.costCenter.cost_center_name" 
+                       required
+                       maxlength="255"
+                       class="form-input">
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.error" class="error-message">
+            {{ $ctrl.error }}
+        </div>
+
+        <div class="form-actions">
+            <button type="button" ng-click="$ctrl.goBack()" class="cancel-button">Cancel</button>
+            <button type="submit" 
+                    class="save-button"
+                    ng-disabled="costCenterForm.$invalid || $ctrl.saving">
+                <i class="fas" ng-class="{'fa-spinner fa-spin': $ctrl.saving, 'fa-save': !$ctrl.saving}"></i>
+                {{ $ctrl.saving ? 'Saving...' : 'Save Cost Center' }}
+            </button>
+        </div>
+    </form>
+</div>

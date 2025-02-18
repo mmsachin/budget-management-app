@@ -1,0 +1,88 @@
+<div class="budget-form-container">
+    <div class="budget-form-header">
+        <h2 class="budget-title">{{ $ctrl.isEditMode ? 'Edit Budget' : 'Create New Budget' }}</h2>
+        <button type="button" ng-click="$ctrl.goBack()" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </button>
+    </div>
+
+    <form ng-submit="$ctrl.saveBudget()" class="budget-form" name="budgetForm">
+        <div class="form-grid">
+            <!-- Project -->
+            <div class="form-group">
+                <label for="project">Project Name <span class="required">*</span></label>
+                <input type="text" 
+                       id="project" 
+                       name="project"
+                       ng-model="$ctrl.budget.project" 
+                       required
+                       class="form-input">
+            </div>
+
+            <!-- AOP ID -->
+            <div class="form-group">
+                <label for="aop_id">AOP ID <span class="required">*</span></label>
+                <input type="text" 
+                       id="aop_id" 
+                       name="aop_id"
+                       ng-model="$ctrl.budget.aop_id"
+                       required
+                       class="form-input">
+            </div>
+
+            <!-- Amount -->
+            <div class="form-group">
+                <label for="amount">Amount ($) <span class="required">*</span></label>
+                <input type="number" 
+                       id="amount" 
+                       name="amount"
+                       ng-model="$ctrl.budget.amount" 
+                       required
+                       step="0.01"
+                       min="0"
+                       class="form-input">
+            </div>
+
+            <!-- LDAP -->
+            <div class="form-group">
+                <label for="ldap">LDAP <span class="required">*</span></label>
+                <input type="text" 
+                       id="ldap" 
+                       name="ldap"
+                       ng-model="$ctrl.budget.ldap" 
+                       required
+                       class="form-input">
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group full-width">
+            <label for="description">Description</label>
+            <textarea id="description" 
+                     name="description"
+                     ng-model="$ctrl.budget.description"
+                     rows="4"
+                     class="form-input"></textarea>
+        </div>
+
+        <!-- Error Message -->
+        <div ng-if="$ctrl.error" class="error-message">
+            {{ $ctrl.error }}
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="button" 
+                    ng-click="$ctrl.goBack()" 
+                    class="cancel-button">
+                Cancel
+            </button>
+            <button type="submit" 
+                    class="save-button"
+                    ng-disabled="budgetForm.$invalid || $ctrl.saving">
+                <i class="fas" ng-class="{'fa-spinner fa-spin': $ctrl.saving, 'fa-save': !$ctrl.saving}"></i>
+                {{ $ctrl.saving ? 'Saving...' : 'Save Budget' }}
+            </button>
+        </div>
+    </form>
+</div>

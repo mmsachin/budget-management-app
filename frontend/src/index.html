@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app="budgetApp">
+<head>
+    <title>Budget Management App</title>
+    <base href="./">
+    <link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="app/navigation/navigation.component.css">
+    <link rel="stylesheet" href="app/dashboard/dashboard.component.css">	
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+	<navigation-bar ng-if="$root.isLoggedIn"></navigation-bar>
+    <div ng-view></div>
+
+    <!-- AngularJS Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    
+    <!-- Application Core -->
+    <script src="app/app.module.js"></script>
+    <script src="app/app-routing.module.js"></script>
+
+    <!-- Services -->
+    <script src="app/services/budget.service.js"></script>
+    <script src="app/services/aop.service.js"></script>
+    <script src="app/services/cost-center.service.js"></script>
+
+    <!-- Navigation -->
+    <script src="app/navigation/navigation.component.js"></script>
+
+    <!-- Components -->
+    <script src="app/login/login.component.js"></script>
+    <script src="app/dashboard/dashboard.component.js"></script>
+    
+    <!-- Budget Components -->
+    <script src="app/budget/budget-list/budget-list.component.js"></script>
+    <script src="app/budget/budget-create/budget-create.component.js"></script>
+    
+	<!-- Cost Center Components -->
+	<script src="app/cost-center/cost-center.service.js"></script>
+	<script src="app/cost-center/cost-center-list/cost-center-list.component.js"></script>	
+	<script src="app/cost-center/cost-center-create/cost-center-create.component.js"></script>
+
+	<!-- Purchase orders -->
+	<script src="app/purchase-order/purchase-order.service.js"></script>
+	<script src="app/purchase-order/purchase-order-list/purchase-order-list.component.js"></script>
+	
+	<!-- User Components -->
+	<script src="app/user/user-list/user-list.component.js"></script>
+	<script src="app/user/user-create/user-create.component.js"></script>
+
+	<!-- Organization Hierarchy Components -->
+	<script src="app/org-hierarchy/org-hierarchy.component.js"></script>
+	<script src="app/org-hierarchy/org-hierarchy-create/org-hierarchy-create.component.js"></script>	
+	
+    <!-- AOP Components -->
+    <script src="app/aop/aop-list/aop-list.component.js"></script>
+    <script src="app/aop/aop-create/aop-create.component.js"></script>
+    <script src="app/aop/aop-detail-list/aop-detail-list.component.js"></script>
+    <script src="app/aop/aop-detail-create/aop-detail-create.component.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "projects": {
+    "budgetApp": {
+      "architect": {
+        "build": {
+          "options": {
+            "outputPath": "dist",
+            "index": "src/index.html",
+            "main": "src/app/app.module.js",
+            "tsConfig": "src/tsconfig.json",
+            "assets": [
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+             "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "budgetApp:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "budgetApp:build:production"
+            }
+          }
+        }
+      }
+    }
+  }
+}

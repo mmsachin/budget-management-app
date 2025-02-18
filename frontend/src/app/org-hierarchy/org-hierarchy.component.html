@@ -1,0 +1,104 @@
+<!-- frontend/src/app/org-hierarchy/org-hierarchy.component.html -->
+
+<div class="budget-list-container">
+    <div class="budget-header">
+        <h2 class="budget-title">Organizational Hierarchy</h2>
+        <button ng-click="$ctrl.goToCreateRelationship()" class="create-button">
+            <i class="fas fa-plus"></i> Add Relationship
+        </button>
+    </div>
+     <div class="filter-section">
+        <!-- Manager Filter -->
+        <div>
+            <select ng-model="$ctrl.selectedManager" ng-change="$ctrl.loadHierarchy()" class="filter-input">
+                <option value="">Select a Manager</option>
+                <option ng-repeat="user in $ctrl.users" value="{{user.ldap}}">{{user.first_name}} {{user.last_name}} ({{user.ldap}})</option>
+
+            </select>
+        </div>
+    </div>
+    <div ng-if="$ctrl.loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading hierarchy...</p>
+    </div>
+    <div ng-if="$ctrl.loadingUsers" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading users...</p>
+    </div>
+
+    <div ng-if="$ctrl.error" class="error-message">
+        {{ $ctrl.error }}
+    </div>
+
+    <div ng-if="!$ctrl.loading && !$ctrl.error && $ctrl.hierarchy.length > 0" class="hierarchy-list">
+     <ul class="hierarchy-level">
+            <li ng-repeat="manager in $ctrl.hierarchy" class="manager-item">
+                <div class="manager-info">
+                    <i class="fas fa-user"></i>
+                    {{manager.first_name}} {{manager.last_name}} ({{manager.ldap}})
+                </div>
+                <ul class="hierarchy-level" ng-if="manager.subordinates && manager.subordinates.length > 0">
+                    <li ng-repeat="employee in manager.subordinates" class="employee-item">
+                        <div class="employee-info">
+                            <i class="fas fa-user-tie"></i>
+                            {{employee.first_name}} {{employee.last_name}} ({{employee.ldap}})
+                        </div>
+                       <!-- Recursive display -->
+                        <ul class="hierarchy-level" ng-if="employee.subordinates && employee.subordinates.length > 0">
+                            <li ng-repeat="subordinate in employee.subordinates" class="subordinate-item">
+                                 <div class="subordinate-info">
+                                    <i class="fas fa-user-tie"></i>
+                                    {{subordinate.first_name}} {{subordinate.last_name}} ({{subordinate.ldap}})
+                                </div>
+                                 <ul class="hierarchy-level" ng-if="subordinate.subordinates && subordinate.subordinates.length > 0">
+                                    <li ng-repeat="subsubordinate in subordinate.subordinates" class="subsubordinate-item">
+                                        <div class="subordinate-info">
+                                            <i class="fas fa-user-tie"></i>
+                                            {{subsubordinate.first_name}} {{subsubordinate.last_name}} ({{subsubordinate.ldap}})
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-if="!$ctrl.loading && !$ctrl.error && $ctrl.hierarchy.length === 0" class="empty-state">
+        <i class="fas fa-sitemap"></i>
+        <p>No hierarchy data found.</p>
+    </div>
+     <!-- Display Relationships (Initial Simple View) -->
+    <table ng-if="!$ctrl.loading && !$ctrl.error && $ctrl.relationships.length > 0 && !$ctrl.selectedManager" class="budget-table">
+        <thead>
+            <tr>
+                <th>Manager LDAP</th>
+                <th>Employee LDAP</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="relationship in $ctrl.relationships">
+                <td>{{ relationship.manager_ldap }}</td>
+                <td>{{ relationship.employee_ldap }}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button ng-click="$ctrl.editRelationship(relationship.relationship_id)" class="edit-button">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button ng-click="$ctrl.deleteRelationship(relationship.relationship_id)" class="delete-button">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div ng-if="!$ctrl.loading && !$ctrl.error && $ctrl.relationships.length === 0 && !$ctrl.selectedManager" class="empty-state">
+        <i class="fas fa-sitemap"></i>
+        <p>No relationships found.</p>
+    </div>
+</div>

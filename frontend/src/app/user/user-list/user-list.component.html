@@ -1,0 +1,119 @@
+<!-- frontend/src/app/user/user-list/user-list.component.html -->
+<div class="budget-list-container">
+    <div class="budget-header">
+        <h2 class="budget-title">User Management</h2>
+        <button ng-click="$ctrl.goToCreateUser()" class="create-button">
+            <i class="fas fa-plus"></i> Add User
+        </button>
+    </div>
+
+    <div class="filter-section">
+        <div>
+            <input type="text" 
+                   ng-model="$ctrl.searchQuery" 
+                   ng-change="$ctrl.filterUsers()"
+                   placeholder="Search users..."
+                   class="filter-input">
+        </div>
+        
+        <div>
+            <select ng-model="$ctrl.selectedCostCenter" 
+                    ng-change="$ctrl.filterUsers()"
+                    class="filter-input">
+                <option value="">All Cost Centers</option>
+                <option ng-repeat="cc in $ctrl.costCenters" 
+                        value="{{cc.cost_center_code}}">
+                    {{cc.cost_center_name}}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <div ng-if="$ctrl.loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading users...</p>
+    </div>
+
+    <div ng-if="$ctrl.error" class="error-message">
+        <p>{{$ctrl.error}}</p>
+    </div>
+
+    <table ng-if="!$ctrl.loading && $ctrl.filteredUsers.length > 0" class="budget-table">
+        <thead>
+            <tr>
+                <th ng-click="$ctrl.sortBy('ldap')">
+                    LDAP
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'ldap'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('first_name')">
+                    First Name
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'first_name'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('last_name')">
+                    Last Name
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'last_name'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('email')">
+                    Email
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'email'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('level')">
+                    Level
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'level'"></i>
+                </th>
+                <th>Cost Center</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="user in $ctrl.getPaginatedUsers()">
+                <td>{{user.ldap}}</td>
+                <td>{{user.first_name}}</td>
+                <td>{{user.last_name}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.level}}</td>
+                <td>{{(($ctrl.costCenters | filter:{cost_center_code:user.cost_center_code})[0].cost_center_name) || 'N/A'}}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button ng-click="$ctrl.editUser(user.ldap)" class="edit-button">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button ng-click="$ctrl.deleteUser(user.ldap)" class="delete-button">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div ng-if="!$ctrl.loading && !$ctrl.error && $ctrl.filteredUsers.length === 0" class="empty-state">
+        <i class="fas fa-users"></i>
+        <p>No users found</p>
+    </div>
+
+    <div ng-if="$ctrl.filteredUsers.length > 0" class="pagination">
+        <div class="pagination-info">
+            Showing {{($ctrl.currentPage - 1) * $ctrl.pageSize + 1}} to 
+            {{Math.min($ctrl.currentPage * $ctrl.pageSize, $ctrl.filteredUsers.length)}} of 
+            {{$ctrl.filteredUsers.length}} entries
+        </div>
+        <div class="pagination-buttons">
+            <button ng-click="$ctrl.currentPage = $ctrl.currentPage - 1" 
+                    ng-disabled="$ctrl.currentPage === 1"
+                    class="pagination-button">
+                Previous
+            </button>
+            <button ng-click="$ctrl.currentPage = $ctrl.currentPage + 1" 
+                    ng-disabled="$ctrl.currentPage * $ctrl.pageSize >= $ctrl.filteredUsers.length"
+                    class="pagination-button">
+                Next
+            </button>
+        </div>
+    </div>
+</div>

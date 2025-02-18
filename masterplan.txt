@@ -1,0 +1,98 @@
+# Budget Management Application - Masterplan Gemini 2.0 Pro experimental
+
+## Overview and Objectives
+
+This document outlines the plan for a Budget Management application, designed for a hackathon environment. The primary goal is to create a functional, albeit simplified, application within a short timeframe. The application will allow users to manage annual operating plans (AOPs), track budgets against those plans, and view a basic report of all budget entries.
+
+## Target Audience
+
+The target audience is internal employees who need to request and track budgets within their organization. For the hackathon, all users are considered equal and have full access to all features.
+
+## Core Features and Functionality
+
+The application will support the following core features:
+
+*   **Cost Center Management:**
+    *   Create, Read, Update, and Delete (CRUD) operations for Cost Centers.
+    *   Cost Centers have a code and a name.
+*   **Employee Management:**
+    *   CRUD operations for Employees.
+    *   Employees have an LDAP (manual entry, no validation), first name, last name, email, level, and cost center code.
+*   **Annual Operating Plan (AOP) Management:**
+    *   CRUD operations for AOP Headers.
+    *   AOP Headers have a name (e.g., AOP2024), a total amount, and a state (draft, active, EOL). Only one AOP can be active at a time.
+    *   CRUD operations for AOP Details.
+    *   AOP Details link an AOP Header to a Cost Center and specify an amount for that Cost Center.
+    *   AOP Detail updates should recalculate the AOP Header's total amount.
+*   **Budget Management:**
+    *   CRUD operations for Budgets.
+    *   Budgets are associated with an AOP.
+    *   Budgets have a unique identifier, a free-text project, a short description, an amount (USD), and the responsible employee's LDAP (manual entry).
+    *   The combination of AOP, Project, Description, Employee (LDAP), and Amount must be unique for each budget.
+    *   No budget approval workflow.
+*   **Reporting:**
+    *   A "Show me my budget" feature that displays a simple list of *all* budget entries in the system (no filtering, no user-specific views, no aggregations).
+
+## High-Level Technical Stack Recommendations
+
+*   **Frontend:** AngularJS (as specified by the developer)
+*   **Backend:** Python with Flask (recommended for simplicity and speed)
+*   **Database:** Google Cloud Spanner (as specified by the developer)
+*   **Deployment:** Google Cloud Platform (GCP)
+
+## Conceptual Data Model
+
+The application will have the following database tables:
+
+*   **CostCenters:**
+    *   `cost_center_code` (STRING, Primary Key)
+    *   `cost_center_name` (STRING)
+*   **Employees:**
+    *   `ldap` (STRING, Primary Key)
+    *   `first_name` (STRING)
+    *   `last_name` (STRING)
+    *   `email` (STRING)
+    *   `level` (STRING)
+    *   `cost_center_code` (STRING, Foreign Key referencing CostCenters)
+*   **AOPHeaders:**
+    *   `aop_id` (INT, Primary Key, Auto-generated)
+    *   `name` (STRING)
+    *   `total_amount` (NUMERIC)
+    *   `state` (STRING, ENUM: 'draft', 'active', 'EOL')
+*   **AOPDetails:**
+    *   `aop_detail_id` (INT, Primary Key, Auto-generated)
+    *   `aop_id` (INT, Foreign Key referencing AOPHeaders)
+    *   `cost_center_code` (STRING, Foreign Key referencing CostCenters)
+    *   `amount` (NUMERIC)
+*   **Budgets:**
+    *   `budget_id` (INT, Primary Key, Auto-generated)
+    *   `aop_id` (INT, Foreign Key referencing AOPHeaders)
+    *   `project` (STRING)
+    *   `description` (STRING)
+    *   `amount` (NUMERIC)
+    *   `ldap` (STRING, Foreign Key referencing Employees)
+
+## User Interface Design Principles
+
+*   **Simplicity:** The UI should be clean and straightforward, prioritizing ease of use and rapid development.
+*   **Dashboard:** A main dashboard with buttons to access CRUD operations for Cost Centers, Employees, AOPs, and Budgets.
+*   **Forms:** Simple forms for creating and editing data.
+*   **Tables:** Use tables to display lists of data (Cost Centers, Employees, AOPs, Budgets).
+*   **Reporting:** A single page displaying a table of all budget entries.
+
+## Security Considerations
+
+*   **Authentication:** A single, pre-shared password ("IKnowYou241202") will be used for authentication.  This is a major simplification for the hackathon and would *not* be suitable for a production environment.
+*   **Authorization:** All logged-in users have full access to all features (no RBAC).
+*   **Data Validation:** Basic data validation should be implemented on the backend to prevent invalid data from being entered into the database (e.g., ensuring numeric fields contain numbers).
+*   **Input Sanitization:**  While less critical for a hackathon, basic input sanitization should be considered to mitigate potential cross-site scripting (XSS) vulnerabilities if time permits.
+
+## Development Phases or Milestones
+
+1.  **GCP Setup:** Create the GCP project, enable the Cloud Spanner API, create the Spanner instance and database, and configure service accounts with appropriate IAM roles.
+2.  **Backend Setup:** Create a basic Python Flask application with API endpoints for at least one entity (e.g., Cost Centers).
+3.  **Database Connection:** Implement the database schema and connection logic in the Python application.
+4.  **Frontend Setup:** Create a basic AngularJS application.
+5.  **MVP:** Implement the ability to create and display Cost Centers (end-to-end, from frontend to database).
+6.  **Iterative Development:** Add CRUD functionality for Employees, AOP Headers, AOP Details, and Budgets, one at a time.
+7.  **Reporting:** Implement the "Show me my budget" report.

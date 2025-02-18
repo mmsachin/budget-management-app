@@ -1,0 +1,118 @@
+<div class="budget-list-container">
+    <!-- Header Section -->
+    <div class="budget-header">
+        <h2 class="budget-title">Budget Management</h2>
+        <button ng-click="$ctrl.goToCreateBudget()" class="create-button">
+            <i class="fas fa-plus"></i> Create New Budget
+        </button>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="filter-section">
+        <!-- Search -->
+        <div>
+            <input type="text" 
+                   ng-model="$ctrl.searchQuery" 
+                   ng-change="$ctrl.filterBudgets()"
+                   placeholder="Search projects..."
+                   class="filter-input">
+        </div>
+        
+        <!-- AOP Filter -->
+        <div>
+            <select ng-model="$ctrl.selectedAop" 
+                    ng-change="$ctrl.filterBudgets()"
+                    class="filter-input">
+                <option value="">All AOPs</option>
+                <option ng-repeat="aop in $ctrl.uniqueAops" value="{{aop}}">{{aop}}</option>
+            </select>
+        </div>
+        
+        <!-- Amount Range -->
+        <div class="amount-range">
+            <input type="number" 
+                   ng-model="$ctrl.minAmount" 
+                   ng-change="$ctrl.filterBudgets()"
+                   placeholder="Min Amount"
+                   class="filter-input">
+            <input type="number" 
+                   ng-model="$ctrl.maxAmount" 
+                   ng-change="$ctrl.filterBudgets()"
+                   placeholder="Max Amount"
+                   class="filter-input">
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div ng-if="$ctrl.loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading budgets...</p>
+    </div>
+
+    <!-- Error State -->
+    <div ng-if="$ctrl.error" class="error-message">
+        <p>{{$ctrl.error}}</p>
+    </div>
+
+    <!-- Empty State -->
+    <div ng-if="!$ctrl.loading && !$ctrl.error && $ctrl.filteredBudgets.length === 0" class="empty-state">
+        <i class="fas fa-folder-open"></i>
+        <h3>No budgets found</h3>
+        <p>Try adjusting your search or filters</p>
+    </div>
+
+    <!-- Budget Table -->
+    <table ng-if="!$ctrl.loading && $ctrl.filteredBudgets.length > 0" class="budget-table">
+        <thead>
+            <tr>
+                <th ng-repeat="header in ['Project', 'AOP ID', 'Description', 'Amount', 'LDAP', 'Actions']" 
+                    ng-click="$ctrl.sortBy(header.toLowerCase())">
+                    {{header}}
+                    <span ng-if="$ctrl.sortField === header.toLowerCase()">
+                        <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}"></i>
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="budget in $ctrl.filteredBudgets">
+                <td>{{budget.project}}</td>
+                <td>{{budget.aop_id}}</td>
+                <td>{{budget.description}}</td>
+                <td>${{budget.amount | number:2}}</td>
+                <td>{{budget.ldap}}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button ng-click="$ctrl.editBudget(budget.budget_id)" class="edit-button">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button ng-click="$ctrl.deleteBudget(budget.budget_id)" class="delete-button">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div ng-if="$ctrl.filteredBudgets.length > 0" class="pagination">
+        <div class="pagination-info">
+            Showing {{($ctrl.currentPage - 1) * $ctrl.pageSize + 1}} to 
+            {{Math.min($ctrl.currentPage * $ctrl.pageSize, $ctrl.filteredBudgets.length)}} of 
+            {{$ctrl.filteredBudgets.length}} entries
+        </div>
+        <div class="pagination-buttons">
+            <button ng-click="$ctrl.currentPage = $ctrl.currentPage - 1" 
+                    ng-disabled="$ctrl.currentPage === 1"
+                    class="pagination-button">
+                Previous
+            </button>
+            <button ng-click="$ctrl.currentPage = $ctrl.currentPage + 1" 
+                    ng-disabled="$ctrl.currentPage * $ctrl.pageSize >= $ctrl.filteredBudgets.length"
+                    class="pagination-button">
+                Next
+            </button>
+        </div>
+    </div>
+</div>

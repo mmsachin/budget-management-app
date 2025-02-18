@@ -1,0 +1,58 @@
+<!-- frontend/src/app/aop/aop-detail-list/aop-detail-list.component.html -->
+<div class="budget-list-container">
+    <div class="budget-header">
+        <h2 class="budget-title">AOP Details</h2>
+         <select ng-model="$ctrl.selectedAopId" ng-change="$ctrl.loadAopDetails()" ng-disabled="$ctrl.loadingHeaders" class="filter-input">
+            <option value="">Select an AOP</option>
+            <option ng-repeat="header in $ctrl.aopHeaders" value="{{header.aop_id}}">{{header.aop_name}}</option>
+        </select>
+        <button ng-click="$ctrl.goToCreateAopDetail()" class="create-button" ng-disabled="!$ctrl.selectedAopId">
+            <i class="fas fa-plus"></i> Add AOP Detail
+        </button>
+    </div>
+
+    <div ng-if="$ctrl.loading || $ctrl.loadingHeaders" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>{{ $ctrl.loadingHeaders ? 'Loading AOP Headers...' : 'Loading AOP Details...' }}</p>
+    </div>
+
+    <div ng-if="$ctrl.error" class="error-message">
+        <p>{{$ctrl.error}}</p>
+    </div>
+
+    <div class="budget-header" ng-if="!$ctrl.loading && !$ctrl.loadingHeaders && $ctrl.selectedAopId">
+      <h4>Total Allocated: ${{$ctrl.totalDetailAmount | number:2}}</h4>
+    </div>
+
+    <table ng-if="!$ctrl.loading && !$ctrl.loadingHeaders && $ctrl.aopDetails.length > 0" class="budget-table">
+        <thead>
+            <tr>
+                <th>Cost Center Code</th>
+                <th>Cost Center Name</th>
+                <th>Amount</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="detail in $ctrl.aopDetails">
+                <td>{{detail.cost_center_code}}</td>
+                <td>{{detail.cost_center_name}}</td>
+                <td>${{detail.amount | number:2}}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button ng-click="$ctrl.editAopDetail(detail.aop_detail_id)" class="edit-button">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button ng-click="$ctrl.deleteAopDetail(detail.aop_detail_id)" class="delete-button">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+     <div ng-if="!$ctrl.loading && !$ctrl.loadingHeaders && !$ctrl.error && $ctrl.aopDetails.length === 0" class="empty-state">
+        <i class="fas fa-folder-open"></i>
+        <p>No AOP Details found for the selected AOP.</p>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<!-- frontend/src/app/org-hierarchy/org-hierarchy-create/org-hierarchy-create.component.html -->
+<div class="budget-form-container">
+    <div class="budget-form-header">
+        <h2 class="budget-title">{{ $ctrl.isEditMode ? 'Edit Relationship' : 'Create Relationship' }}</h2>
+        <button type="button" ng-click="$ctrl.goBack()" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </button>
+    </div>
+
+    <form ng-submit="$ctrl.saveRelationship()" class="budget-form" name="relationshipForm">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="manager_ldap">Manager LDAP <span class="required">*</span></label>
+                <select id="manager_ldap" name="manager_ldap" ng-model="$ctrl.relationship.manager_ldap" required class="form-input" ng-disabled="$ctrl.loadingUsers">
+                    <option value="">Select Manager</option>
+                     <option ng-repeat="user in $ctrl.users" value="{{user.ldap}}">{{user.first_name}} {{user.last_name}} ({{user.ldap}})</option>
+                </select>
+            </div>
+             <div class="form-group">
+                <label for="employee_ldap">Employee LDAP <span class="required">*</span></label>
+                <select id="employee_ldap" name="employee_ldap" ng-model="$ctrl.relationship.employee_ldap" required class="form-input" ng-disabled="$ctrl.loadingUsers">
+                    <option value="">Select Employee</option>
+                   <option ng-repeat="user in $ctrl.users" value="{{user.ldap}}">{{user.first_name}} {{user.last_name}} ({{user.ldap}})</option>
+                </select>
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.error" class="error-message">
+            {{ $ctrl.error }}
+        </div>
+
+        <div class="form-actions">
+            <button type="button" ng-click="$ctrl.goBack()" class="cancel-button">Cancel</button>
+            <button type="submit" class="save-button" ng-disabled="relationshipForm.$invalid || $ctrl.saving">
+                <i class="fas" ng-class="{'fa-spinner fa-spin': $ctrl.saving, 'fa-save': !$ctrl.saving}"></i>
+                {{ $ctrl.saving ? 'Saving...' : 'Save' }}
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,65 @@
+<!-- frontend/src/app/cost-center/cost-center-list/cost-center-list.component.html -->
+<div class="budget-list-container">
+    <div class="budget-header">
+        <h2 class="budget-title">Cost Centers</h2>
+        <button ng-click="$ctrl.goToCreateCostCenter()" class="create-button">
+            <i class="fas fa-plus"></i> Add Cost Center
+        </button>
+    </div>
+
+    <div ng-if="$ctrl.loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading cost centers...</p>
+    </div>
+
+    <div ng-if="$ctrl.error" class="error-message">
+        <p>{{$ctrl.error}}</p>
+    </div>
+
+    <div class="filter-section">
+        <input type="text" 
+               ng-model="$ctrl.searchQuery" 
+               ng-change="$ctrl.filterCostCenters()"
+               placeholder="Search cost centers..."
+               class="filter-input">
+    </div>
+
+    <table ng-if="!$ctrl.loading && $ctrl.filteredCostCenters.length > 0" class="budget-table">
+        <thead>
+            <tr>
+                <th ng-click="$ctrl.sortBy('cost_center_code')">
+                    Code
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'cost_center_code'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('cost_center_name')">
+                    Name
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'cost_center_name'"></i>
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="costCenter in $ctrl.filteredCostCenters">
+                <td>{{costCenter.cost_center_code}}</td>
+                <td>{{costCenter.cost_center_name}}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button ng-click="$ctrl.editCostCenter(costCenter.cost_center_code)" class="edit-button">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button ng-click="$ctrl.deleteCostCenter(costCenter.cost_center_code)" class="delete-button">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div ng-if="!$ctrl.loading && !$ctrl.error && $ctrl.filteredCostCenters.length === 0" class="empty-state">
+        <i class="fas fa-folder-open"></i>
+        <p>No cost centers found</p>
+    </div>
+</div>

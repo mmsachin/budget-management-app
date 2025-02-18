@@ -1,0 +1,119 @@
+<!-- frontend/src/app/purchase-order/purchase-order-list/purchase-order-list.component.html -->
+<div class="budget-list-container">
+    <div class="budget-header">
+        <h2 class="budget-title">Purchase Orders</h2>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="filter-section">
+        <div>
+            <input type="text" 
+                   ng-model="$ctrl.searchQuery" 
+                   ng-change="$ctrl.filterPOs()"
+                   placeholder="Search PO number, item, or requestor..."
+                   class="filter-input">
+        </div>
+        
+        <div>
+            <input type="date" 
+                   ng-model="$ctrl.dateRange.start" 
+                   ng-change="$ctrl.filterPOs()"
+                   placeholder="Start Date"
+                   class="filter-input">
+        </div>
+        
+        <div>
+            <input type="date" 
+                   ng-model="$ctrl.dateRange.end" 
+                   ng-change="$ctrl.filterPOs()"
+                   placeholder="End Date"
+                   class="filter-input">
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div ng-if="$ctrl.loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading purchase orders...</p>
+    </div>
+
+    <!-- Error State -->
+    <div ng-if="$ctrl.error" class="error-message">
+        <p>{{$ctrl.error}}</p>
+    </div>
+
+    <!-- Empty State -->
+    <div ng-if="!$ctrl.loading && !$ctrl.error && $ctrl.filteredPOs.length === 0" class="empty-state">
+        <i class="fas fa-file-invoice-dollar"></i>
+        <p>No purchase orders found</p>
+    </div>
+
+    <!-- Purchase Orders Table -->
+    <table ng-if="!$ctrl.loading && $ctrl.filteredPOs.length > 0" class="budget-table">
+        <thead>
+            <tr>
+                <th ng-click="$ctrl.sortBy('po_number')">
+                    PO Number
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'po_number'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('po_line_number')">
+                    Line Number
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'po_line_number'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('purchase_item')">
+                    Item
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'purchase_item'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('amount')">
+                    Amount
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'amount'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('requestor_ldap')">
+                    Requestor
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'requestor_ldap'"></i>
+                </th>
+                <th ng-click="$ctrl.sortBy('po_date')">
+                    PO Date
+                    <i class="fas" ng-class="{'fa-sort-up': !$ctrl.sortReverse, 'fa-sort-down': $ctrl.sortReverse}" 
+                       ng-if="$ctrl.sortField === 'po_date'"></i>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="po in $ctrl.getPaginatedPOs()">
+                <td>{{po.po_number}}</td>
+                <td>{{po.po_line_number}}</td>
+                <td>{{po.purchase_item}}</td>
+                <td>${{po.amount | number:2}}</td>
+                <td>{{po.requestor_ldap}}</td>
+                <td>{{po.po_date | date:'MMM d, y'}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div ng-if="$ctrl.filteredPOs.length > 0" class="pagination">
+        <div class="pagination-info">
+            Showing {{($ctrl.currentPage - 1) * $ctrl.pageSize + 1}} to 
+            {{Math.min($ctrl.currentPage * $ctrl.pageSize, $ctrl.filteredPOs.length)}} of 
+            {{$ctrl.filteredPOs.length}} entries
+        </div>
+        <div class="pagination-buttons">
+            <button ng-click="$ctrl.currentPage = $ctrl.currentPage - 1" 
+                    ng-disabled="$ctrl.currentPage === 1"
+                    class="pagination-button">
+                Previous
+            </button>
+            <button ng-click="$ctrl.currentPage = $ctrl.currentPage + 1" 
+                    ng-disabled="$ctrl.currentPage * $ctrl.pageSize >= $ctrl.filteredPOs.length"
+                    class="pagination-button">
+                Next
+            </button>
+        </div>
+    </div>
+</div>
