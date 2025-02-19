@@ -1,0 +1,15 @@
+
+Front end:
+
+npm run build
+firebase deploy --only hosting
+
+
+Backend
+
+gcloud run deploy budget-backend \
+    --source . \
+    --region us-central1 \
+    --allow-unauthenticated \
+    --project alert-synapse-450214-e2 \
+    --set-env-vars SPANNER_INSTANCE=budget-management,SPANNER_DATABASE=budget-db
