@@ -139,3 +139,24 @@ INSERT INTO PurchaseOrders (po_id, po_number, po_line_number, requestor_ldap, bu
 (3, 'PO1003', 1, 'bjones', 3, 'Sales Training Materials', 2000.00, '2024-02-10'),
 (4, 'PO1004', 1, 'clee', 4, 'Software Licenses', 8000.00, '2024-02-20'),
 (5, 'PO1005', 1, 'ddavis', 5, 'Printer Paper', 500.00, '2024-03-01');
+
+-- Chat sessions
+CREATE TABLE ChatSessions (
+  session_id STRING(36) NOT NULL PRIMARY KEY,
+  user_identifier STRING(255),
+  last_interaction TIMESTAMP,
+);
+
+-- Chat Messages
+CREATE TABLE ChatMessages (
+  session_id STRING(36) NOT NULL PRIMARY KEY,
+  message_id INT64 NOT NULL,
+  role STRING(20),
+  text STRING(MAX),
+  CONSTRAINT   FK_ChatMessages_ChatSessions
+FOREIGN KEY
+  (session_id)
+REFERENCES
+  ChatSessions(session_id) );
+
+
