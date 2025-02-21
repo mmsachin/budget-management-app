@@ -1,0 +1,26 @@
+Steps to download download all files and folders from your frontend directory within Google Cloud Shell to your local Downloads folder
+
+a. Go to the main folder
+sachin_mm4u@cloudshell:~/budget-management-app
+
+b. Zip the frontend Directory
+zip -r frontend.zip frontend/
+
+c. Create a Web Preview Link:
+
+python3 -m http.server 8080
+
+This starts a web server on port 8080, serving files from the current directory.
+
+Now, click the "Web preview" button in the Cloud Shell toolbar.
+
+Select "Preview on port 8080."
+
+This will open a new browser tab or window showing the contents of your current directory. You should see frontend.zip listed.
+
+d. Download the File:
+
+In the web preview window, right-click on frontend.zip.
+Select "Save link as..." (or a similar option, depending on your browser).
+Choose your local Downloads folder as the destination.
+Click "Save."
